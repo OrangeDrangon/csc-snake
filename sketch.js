@@ -14,13 +14,13 @@ class Point {
 
 class Food extends Point {
     constructor(size) {
-        super(random(50, size-49), random(50, size-49));
+        super(random(50, size - 49), random(50, size - 49));
         this.size = size
     }
 
     move() {
-        this.x = random(50, this.size-49);
-        this.y = random(50, this.size-49);
+        this.x = random(50, this.size - 49);
+        this.y = random(50, this.size - 49);
     }
 }
 
@@ -33,6 +33,7 @@ class Snake {
         this.direction = directions.east;
         this.body;
         this.score = 0;
+        this.hasMoved = false;
         return;
     }
 
@@ -64,6 +65,7 @@ class Snake {
         } else {
             this.pendingFood--;
         }
+        this.hasMoved = true;
         return;
     }
 
@@ -88,7 +90,7 @@ class Snake {
     detectFood(food) {
         const head = this.body[this.body.length - 1];
         if (Math.abs(head.x - food.x) <= this.resolution &&
-        Math.abs(head.y - food.y) <= this.resolution) {
+            Math.abs(head.y - food.y) <= this.resolution) {
             food.move();
             this.pendingFood += 10;
             this.score++;
@@ -137,9 +139,12 @@ function draw() {
 }
 
 function keyPressed(event) {
-    key = event.code;
-    if (key === 'ArrowUp' && snake.direction !== directions.south) snake.direction = directions.north;
-    else if (key === 'ArrowDown' && snake.direction !== directions.north) snake.direction = directions.south;
-    else if (key === 'ArrowRight' && snake.direction !== directions.west) snake.direction = directions.east;
-    else if (key === 'ArrowLeft' && snake.direction !== directions.east) snake.direction = directions.west;
+    if (snake.hasMoved) {
+        key = event.code;
+        if (key === 'ArrowUp' && snake.direction !== directions.south) snake.direction = directions.north;
+        else if (key === 'ArrowDown' && snake.direction !== directions.north) snake.direction = directions.south;
+        else if (key === 'ArrowRight' && snake.direction !== directions.west) snake.direction = directions.east;
+        else if (key === 'ArrowLeft' && snake.direction !== directions.east) snake.direction = directions.west;
+        snake.hasMoved = false;
+    }
 }
