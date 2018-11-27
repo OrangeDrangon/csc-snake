@@ -12,6 +12,18 @@ class Point {
     }
 }
 
+class Food extends Point {
+    constructor(size) {
+        super(random(50, size-49), random(50, size-49));
+        this.size = size
+    }
+
+    move() {
+        this.x = random(50, this.size-49);
+        this.y = random(50, this.size-49);
+    }
+}
+
 class Snake {
     constructor(size, resolution) {
         this.size = size;
@@ -63,24 +75,36 @@ class Snake {
         }
         for (let i = 0; i < this.body.length - 1; i++) {
             const segment = this.body[i];
-            if (Math.abs(head.x - segment.x) <= this.resolution/2 && Math.abs(head.y - segment.y) <= this.resolution/2) {
-                    this.gameover = true;
-                    return;
-                }
+            if (Math.abs(head.x - segment.x) <= this.resolution / 2 &&
+                Math.abs(head.y - segment.y) <= this.resolution / 2) {
+                this.gameover = true;
+                return;
+            }
         }
         return;
+    }
+
+    detectFood(food) {
+        const head = this.body[this.body.length - 1];
+        if (Math.abs(head.x - food.x) <= this.resolution &&
+        Math.abs(head.y - food.y) <= this.resolution) {
+            food.move();
+            this.pendingFood += 10;
+        }
     }
 }
 
 const SIZE = 500;
-const RESOLUTION = 3;
+const RESOLUTION = 10;
 let snake;
+let food;
 
 function setup() {
     createCanvas(SIZE, SIZE);
     background(51);
 
     snake = new Snake(SIZE, RESOLUTION);
+    food = new Food(SIZE);
     snake.startGame();
 
     noStroke();
@@ -93,6 +117,7 @@ function draw() {
         fill(255);
         snake.move();
         snake.detectDeath();
+        snake.detectFood(food);
 
     } else {
         fill(255, 0, 0);
@@ -100,6 +125,7 @@ function draw() {
     for (const segment of snake.body) {
         rect(segment.x, segment.y, RESOLUTION, RESOLUTION);
     }
+    rect(food.x, food.y, RESOLUTION, RESOLUTION);
 }
 
 function keyPressed(event) {
