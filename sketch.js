@@ -55,9 +55,20 @@ class Snake {
     }
 
     detectDeath() {
+        if (this.body.length < 25) return;
         const head = this.body[this.body.length - 1];
-
-        if (head.x > this.size || head.x < 0 || head.y > this.size || head.y < 0) this.gameover = true;
+        if (head.x > this.size || head.x < 0 || head.y > this.size || head.y < 0) {
+            this.gameover = true;
+            return;
+        }
+        for (let i = 0; i < this.body.length - 1; i++) {
+            const segment = this.body[i];
+            if (Math.abs(head.x - segment.x) <= this.resolution/2 && Math.abs(head.y - segment.y) <= this.resolution/2) {
+                    this.gameover = true;
+                    return;
+                }
+        }
+        return;
     }
 }
 
@@ -73,6 +84,7 @@ function setup() {
     snake.startGame();
 
     noStroke();
+    rectMode(CENTER);
 }
 
 function draw() {
@@ -81,19 +93,19 @@ function draw() {
         fill(255);
         snake.move();
         snake.detectDeath();
-        
+
     } else {
-        fill(255,0,0);
+        fill(255, 0, 0);
     }
     for (const segment of snake.body) {
-        rect(segment.x, segment.y, 5, 5);
+        rect(segment.x, segment.y, RESOLUTION, RESOLUTION);
     }
 }
 
 function keyPressed(event) {
     key = event.code;
-    if (key === 'ArrowUp') snake.direction = directions.north;
-    else if (key === 'ArrowDown') snake.direction = directions.south;
-    else if (key === 'ArrowRight') snake.direction = directions.east;
-    else if (key === 'ArrowLeft') snake.direction = directions.west;
+    if (key === 'ArrowUp' && snake.direction !== directions.south) snake.direction = directions.north;
+    else if (key === 'ArrowDown' && snake.direction !== directions.north) snake.direction = directions.south;
+    else if (key === 'ArrowRight' && snake.direction !== directions.west) snake.direction = directions.east;
+    else if (key === 'ArrowLeft' && snake.direction !== directions.east) snake.direction = directions.west;
 }
