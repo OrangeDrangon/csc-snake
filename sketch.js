@@ -31,7 +31,8 @@ class Snake {
         this.gameover = true;
         this.pendingFood = 0;
         this.direction = directions.east;
-        this.body = new Array(0);
+        this.body;
+        this.score = 0;
         return;
     }
 
@@ -90,11 +91,13 @@ class Snake {
         Math.abs(head.y - food.y) <= this.resolution) {
             food.move();
             this.pendingFood += 10;
+            this.score++;
+            return;
         }
     }
 }
 
-const SIZE = 500;
+const SIZE = 750;
 const RESOLUTION = 10;
 let snake;
 let food;
@@ -109,6 +112,9 @@ function setup() {
 
     noStroke();
     rectMode(CENTER);
+    textFont('Arial');
+    textSize(50);
+    textAlign(CENTER);
 }
 
 function draw() {
@@ -126,6 +132,8 @@ function draw() {
         rect(segment.x, segment.y, RESOLUTION, RESOLUTION);
     }
     rect(food.x, food.y, RESOLUTION, RESOLUTION);
+
+    text(snake.score.toString(), 25, 50);
 }
 
 function keyPressed(event) {
