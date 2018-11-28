@@ -13,16 +13,16 @@ class Point {
     }
 }
 
-class Food extends Point {
+class Food {
     constructor(size) {
-        super(random(50, size - 49), random(50, size - 49));
+        this.location = new Point(random(50, size - 49), random(50, size - 49));
         this.size = size
         return;
     }
 
     move() {
-        this.x = random(50, this.size - 49);
-        this.y = random(50, this.size - 49);
+        this.location.x = random(50, this.size - 49);
+        this.location.y = random(50, this.size - 49);
         return;
     }
 }
@@ -94,8 +94,8 @@ class Snake {
 
     detectFood(food) {
         const head = this.body[this.body.length - 1];
-        if (Math.abs(head.x - food.x) <= this.resolution &&
-            Math.abs(head.y - food.y) <= this.resolution) {
+        if (Math.abs(head.x - food.location.x) <= this.resolution &&
+            Math.abs(head.y - food.location.y) <= this.resolution) {
             food.move();
             this.pendingFood += 10;
             this.score++;
@@ -140,7 +140,7 @@ function draw() {
     for (const segment of snake.body) {
         rect(segment.x, segment.y, RESOLUTION, RESOLUTION);
     }
-    rect(food.x, food.y, RESOLUTION, RESOLUTION);
+    rect(food.location.x, food.location.y, RESOLUTION, RESOLUTION);
     text(snake.score.toString(), 25, 50);
     return;
 }
