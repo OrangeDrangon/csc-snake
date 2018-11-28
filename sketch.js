@@ -9,6 +9,7 @@ class Point {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        return;
     }
 }
 
@@ -16,11 +17,13 @@ class Food extends Point {
     constructor(size) {
         super(random(50, size - 49), random(50, size - 49));
         this.size = size
+        return;
     }
 
     move() {
         this.x = random(50, this.size - 49);
         this.y = random(50, this.size - 49);
+        return;
     }
 }
 
@@ -30,16 +33,18 @@ class Snake {
         this.resolution = resolution;
         this.gameover = true;
         this.pendingFood = 0;
-        this.direction = directions.east;
+        this.direction;
         this.body;
         this.score = 0;
         this.hasMoved = false;
+        this.paused = false;
         return;
     }
 
     startGame() {
         if (!this.gameover) return;
         this.pendingFood = 25;
+        this.direction = directions.east;
         this.body = new Array(0);
         this.body.push(new Point(this.size / 2, this.size / 2));
         this.gameover = false;
@@ -94,8 +99,8 @@ class Snake {
             food.move();
             this.pendingFood += 10;
             this.score++;
-            return;
         }
+        return;
     }
 }
 
@@ -117,25 +122,27 @@ function setup() {
     textFont('Arial');
     textSize(50);
     textAlign(CENTER);
+    return;
 }
 
 function draw() {
-    if (!snake.gameover) {
+    if (snake.paused) {
+        text('Paused', SIZE/2, SIZE/2)
+    } else if (snake.gameover) {
+        fill(255, 0, 0);
+    } else {
         background(51);
         fill(255);
         snake.move();
         snake.detectDeath();
         snake.detectFood(food);
-
-    } else {
-        fill(255, 0, 0);
     }
     for (const segment of snake.body) {
         rect(segment.x, segment.y, RESOLUTION, RESOLUTION);
     }
     rect(food.x, food.y, RESOLUTION, RESOLUTION);
-
     text(snake.score.toString(), 25, 50);
+    return;
 }
 
 function keyPressed(event) {
@@ -147,4 +154,7 @@ function keyPressed(event) {
         else if (key === 'ArrowLeft' && snake.direction !== directions.east) snake.direction = directions.west;
         snake.hasMoved = false;
     }
+    if (key === 'Enter') snake.startGame();
+    else if (key === 'Escape') snake.paused = !snake.paused;
+    return;
 }
