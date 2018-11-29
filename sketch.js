@@ -35,7 +35,7 @@ class Snake {
         this.pendingFood = 0;
         this.direction;
         this.body;
-        this.score = 0;
+        this.score;
         this.hasMoved = false;
         this.paused = false;
         return;
@@ -47,6 +47,7 @@ class Snake {
         this.direction = directions.east;
         this.body = new Array(0);
         this.body.push(new Point(this.size / 2, this.size / 2));
+        this.score = 0;
         this.gameover = false;
         return;
     }
