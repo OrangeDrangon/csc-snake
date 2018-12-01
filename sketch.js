@@ -31,7 +31,7 @@ class Snake {
     constructor(size, resolution) {
         this.size = size;
         this.resolution = resolution;
-        this.gameover = true;
+        this.gameOver = true;
         this.pendingFood = 0;
         this.direction;
         this.body;
@@ -42,18 +42,18 @@ class Snake {
     }
 
     startGame() {
-        if (!this.gameover) return;
+        if (!this.gameOver) return;
         this.pendingFood = 25;
         this.direction = directions.east;
         this.body = new Array(0);
         this.body.push(new Point(this.size / 2, this.size / 2));
         this.score = 0;
-        this.gameover = false;
+        this.gameOver = false;
         return;
     }
 
     move() {
-        if (this.gameover) return;
+        if (this.gameOver) return;
         const head = this.body[this.body.length - 1];
 
         if (this.direction === directions.north) {
@@ -79,14 +79,14 @@ class Snake {
         if (this.body.length < 25) return;
         const head = this.body[this.body.length - 1];
         if (head.x > this.size || head.x < 0 || head.y > this.size || head.y < 0) {
-            this.gameover = true;
+            this.gameOver = true;
             return;
         }
         for (let i = 0; i < this.body.length - 1; i++) {
             const segment = this.body[i];
             if (Math.abs(head.x - segment.x) <= this.resolution / 2 &&
                 Math.abs(head.y - segment.y) <= this.resolution / 2) {
-                this.gameover = true;
+                this.gameOver = true;
                 return;
             }
         }
@@ -129,7 +129,7 @@ function setup() {
 function draw() {
     if (snake.paused) {
         text('Paused', SIZE/2, SIZE/2)
-    } else if (snake.gameover) {
+    } else if (snake.gameOver) {
         fill(255, 0, 0);
     } else {
         background(51);
