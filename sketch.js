@@ -128,7 +128,7 @@ function setup() {
 
 function draw() {
     if (snake.paused) {
-        text('Paused', SIZE/2, SIZE/2)
+        text('Paused', SIZE / 2, SIZE / 2)
     } else if (snake.gameOver) {
         fill(255, 0, 0);
     } else {
